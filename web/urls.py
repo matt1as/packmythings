@@ -1,4 +1,6 @@
 from django.conf.urls import patterns, include, url
+from django.views.generic import TemplateView, CreateView, DetailView, ListView
+
 from web.api import UserResource, TripResource, ItemResource, TypeOfTripResource, TripItemRelationshipResource, PopularItemResource
 from tastypie.api import Api
 from django.contrib.auth.decorators import login_required
@@ -7,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 #--------------- Models and views--------------------
 from web.models import Trip, Item
 from web.forms import TripForm, ItemForm, UserForm
-from web.views import TripDetailView, BaseListView, BaseDetailView, BaseCreateView, TripCreateView, StartView
+from web.views import TripDetailView, TripCreateView, StartView
 from web.base_views import BaseUpdateView, BaseTemplateView
 
 
@@ -35,7 +37,7 @@ urlpatterns = patterns('',
         template_name='trip/detail.html'
     ),'','detail_trip'),
   
-    (r'^trip/$', BaseListView.as_view(
+    (r'^trip/$', ListView.as_view(
 		model=Trip,
 		template_name='trip/list.html'
       
@@ -48,16 +50,16 @@ urlpatterns = patterns('',
     ))),
 	
 #------------ Item Views  --------------
-    (r'^item/$', BaseListView.as_view(
+    (r'^item/$', ListView.as_view(
         model=Item,
         template_name='item/list.html'
     )),
 
-    (r'^item/(?P<pk>\d+)/$',BaseDetailView.as_view(
+    (r'^item/(?P<pk>\d+)/$',DetailView.as_view(
         model=Item,
         template_name='item/detail.html',
     )),
-	(r'^item/create/$', login_required(BaseCreateView.as_view(
+	(r'^item/create/$', login_required(CreateView.as_view(
 	  	form_class=ItemForm,
         template_name='item/create.html',
 		success_url='/'

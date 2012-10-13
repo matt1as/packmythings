@@ -10,11 +10,12 @@ class TripMenu(CMSAttachMenu):
 	
 	def get_nodes(self, request):
 		nodes = []
-		#if request.user.is_authenticated():
+		if request.user.is_authenticated():
 			#my_trips= Trip.objects.filter( request.user in self.members )
-			#for index, trip in 	enumerate( my_trips ):
-			#	n = NavigationNode(_(trip.name), '/web/trip/' + str(trip.id), index )
-			#	nodes.append( n )
+			my_trips = request.my_trips
+			for index, relationship in 	enumerate( my_trips ):
+				n = NavigationNode(_(relationship.trip.name), '/web/trip/' + str(relationship.trip.id), index )
+				nodes.append( n )
 		return nodes
 
 menu_pool.register_menu(TripMenu)
