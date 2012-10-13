@@ -34,6 +34,10 @@ class TripCreateView(BaseCreateView):
 		items = Item.objects.filter(trip__in=trips_of_type).distinct()[:10]
 		obj.save()
 	
+		tripUserRelationsship = TripUserRelationship( trip = obj, user = self.request.user )
+		tripUserRelationsship.owner = True
+		tripUserRelationsship.save()
+		
 		for item in items:
 			r1 = TripItemRelationship(trip = obj, item = item )
 			r1.owner = self.request.user
