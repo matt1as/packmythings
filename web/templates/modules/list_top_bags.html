@@ -1,0 +1,6 @@
+  <h2>Top Bags</h2>  
+  <ul>
+        {% for bag in top_bags %}
+            <li><a href="/web/bag/{{bag.id}}">{{ bag.name }}</a></li>
+        {% endfor %}
+    </ul>

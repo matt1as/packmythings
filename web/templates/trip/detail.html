@@ -1,0 +1,307 @@
+
+{% extends "main_hero_3cols.html" %}
+{% load cms_tags sekizai_tags disqus_tags %}
+{% block title %}
+  {{ object.name }}
+{% endblock %}
+
+{% block meta_description %}
+	{{trip.description }}
+{% endblock %}
+
+{% block meta_keywords %}
+	{{trip.destination}}, {{trip.type_of_trip}}, Packing, Travel, Bag, Luggage
+{% endblock %}
+
+{% block hero_content %}
+	<div class="page-header"><h1 id="trip_name">{{trip.name}}</h1></div>
+	<h2>{{trip.destination}}</h2>
+	<span id="trip_description">{{trip.description}}</span>
+	<!-- AddThis Button BEGIN -->
+	<div class="addthis_toolbox addthis_default_style ">
+	<a class="addthis_button_preferred_1"></a>
+	<a class="addthis_button_preferred_2"></a>
+	<a class="addthis_button_preferred_3"></a>
+	<a class="addthis_button_preferred_4"></a>
+	<a class="addthis_button_compact"></a>
+	<a class="addthis_counter addthis_bubble_style"></a>
+	</div>
+	<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-5038990545bff28e"></script>
+	<!-- AddThis Button END -->
+{% endblock %}
+{% block left_content %}
+<div class="well unit-bg">
+	{{texts.name }}
+  <ul id="items" data-bind="foreach: items">
+		<li>
+			{% if is_owner%}
+			<input type="checkbox" data-bind="checked: is_packed, click: $root.setPacked" />
+			<i class="icon-minus-sign" data-bind="click: $root.removeItem" ></i> 
+			{% endif %}
+			<span data-bind="text: quantity"></span>
+			{% if is_owner%}
+			
+			<i class="icon-plus-sign" data-bind="click: $root.increaseQuantity" ></i> 
+			{% endif %}
+			<span data-bind="text: name">
+			</span>
+		</li>
+  </ul>
+	{% if is_owner%}
+<hr/>
+	<ul id="all_items">
+		<!--	<H3>Add Item</H3>
+			Search for an item to add, or add your own.-->
+			<input id="search_items_input" name="search_items_input"/>
+			<i class="icon-plus-sign button add_item_image" id="add_item_image"	></i>
+			<input type="hidden" id="search_item_id" name="search_item_id">		
+	</ul>
+	{% endif %}
+	</div>>
+	{% endblock %}
+	{% block right_content %}
+    <div class="well unit-bg">
+		{% disqus_dev %}
+		{% disqus_show_comments %}
+
+		</div>
+	{% endblock %}
+	{% block center_content %}
+	<div class="well unit-bg">
+	{% if is_owner%}
+
+	<H3>Suggested Items for your trip</H3>
+
+	<ul id="popular_items" data-bind="foreach: popular_items">
+		<li><i  class="icon-plus-sign" data-bind="click: $root.moveFromPopularItem"></i> <span data-bind="text: name" /></li	>
+	</ul>
+	{% endif %}
+	</div>
+	{% endblock %}
+
+{% block scripts %}
+<script>
+
+// Class to represent an item
+function Item(name, uri, relationsship_id, quantity, is_packed) {
+    var self = this;
+    self.name = name;
+	self.relationship_uri = relationsship_id;
+	self.resource_uri = uri;
+	self.is_packed = ko.observable(is_packed == "True");
+	self.quantity = ko.observable( quantity );
+
+}
+
+
+// Model holding data for the view
+function TripViewModel() {
+    var self = this;
+	
+	// Populate initial popular items
+	self.popular_items = ko.observableArray([	
+		{% for item in popular_items%}
+			new Item('{{item.name}}', '/api/v1/item/{{item.id}}/', ''),
+		{% endfor %}
+		]);	
+	
+	// populate initial items
+	self.items = ko.observableArray([	
+		{% for item in items%}
+				new Item('{{item.item.name}}',
+						'/api/v1/item/{{item.item.id}}/', 
+						'/api/v1/tripitemrelationship/{{item.id}}/',  
+						{{item.quantity}}, '{{item.packed}}'),
+		{% endfor %}
+		]);
+	
+	
+	// Removes item from item list, if quantity == 0 it is removed completely
+	self.removeItem = function(item) {
+		if( item.quantity() > 1 ) {
+			item.quantity( item.quantity()-1);
+			updateItemRelationship( item );
+		} else {
+			self.items.remove(item);
+			self.popular_items.push(item);
+			removeItem(item.relationship_uri);
+			
+		}
+	};
+	
+	// Increase quantity of item 
+	self.increaseQuantity = function( item ) {
+		item.quantity(item.quantity()+1);
+		updateItemRelationship( item );
+	}
+	
+	// Saves the is packed flag to the server
+	self.setPacked = function( item ) {
+		updateItemRelationship( item );
+		return true;
+	}
+	
+	// Saves the item to the server
+	self.updateItem = function( item ) {
+		updateItemRelationship( item );
+	}
+	
+	// Moves item from popular item to item list
+    self.moveFromPopularItem = function(item) { 
+		self.popular_items.remove(item);
+		item.quantity(1);
+		addItem( self, item, '/api/v1/trip/{{trip.id}}/', 1);
+	}
+}	
+
+
+	var tripModel = new TripViewModel();
+	var tmpName;
+	ko.applyBindings( tripModel );
+	
+		$( "#search_items_input" ).autocomplete({
+					source: function( request, response ) {
+						$.ajax({
+							url: "/api/v1/item/",
+							dataType: "jsonp",
+							data: {
+								name__contains: request.term
+							},
+							success: function( data ) {
+								response( $.map( data.objects, function( item ) {
+								return {
+									label: item.name,
+									value: item.name,
+									resource_uri: item.resource_uri	
+								}
+							}));
+							}
+						});
+					},
+					minLength: 2,
+					select: function( event, ui ) {
+						$('#search_item_id').val(ui.item.resource_uri);
+					},
+					open: function() {
+					
+					},
+					close: function() {
+						
+					}
+				});
+
+		$(".add_item_image").click(function() {
+			var element = $(this);
+			var item_uri = $('#search_item_id').val();
+
+			if(item_uri == "") {
+				var json = new Object();
+				var tmpName = $('#search_items_input').val();
+				json['name'] = $('#search_items_input').val();
+				$.ajax({
+					type: "POST",
+					url: "/api/v1/item/",
+					contentType: "application/json",
+					data: JSON.stringify(json),
+					success:function(xhr, txt, c){ 
+						var json = new Object();
+						var url = c.getResponseHeader('location');
+					
+							var a = document.createElement('a');
+							a.href = url;
+							var resource = a.pathname + a.search; // /file.php?id=1
+							resource_uri = resource; 
+							var name = tmpName;
+							
+							var item = new Item(name, resource_uri, '', 1, false );
+							
+						addItem(tripModel, item,  '/api/v1/trip/{{trip.id}}/');
+					},	
+				});
+			} else {
+				resource_uri = $('#search_item_id').val();
+				var name = jQuery.extend({}, $('#search_items_input').val());
+				var item = new Item( name, resource_uri, '', 1, false);
+				
+				addItem( tripModel,item, '/api/v1/trip/{{trip.id}}/');		
+			}
+			$('#search_items_input').val("");
+			return false;
+		});
+	
+		function addItem( context, item, tripUri ) {
+				var json = new Object();
+				json['trip'] = tripUri;
+				json['item'] = 	item.resource_uri;
+				var uri;
+				$.ajax({
+					type: "POST",
+					url: "/api/v1/tripitemrelationship/",
+					contentType: "application/json",
+					data: JSON.stringify(json),
+					success: function(xhr, txt, c){
+						url = c.getResponseHeader('location');
+						var a = document.createElement('a');
+						a.href = url;
+						var resource = a.pathname + a.search; // /file.php?id=1
+						item.relationship_uri = resource;
+						context.items.push( item );
+					},	
+				});
+		}
+		
+		function removeItem( relationship_uri ) {
+				
+				$.ajax({
+				    type: "DELETE",
+				    url: relationship_uri,
+					contentType: "application/json",
+				
+				});		
+		}
+		
+		function updateItemRelationship( item ) {
+			var tripItemRelationship = new Object();
+			tripItemRelationship['quantity'] = item.quantity();
+			tripItemRelationship['packed'] = item.is_packed();
+				$.ajax({
+					type: "PATCH",
+					url: item.relationship_uri,
+					contentType: "application/json",
+					dataType: "application/json",
+					data: JSON.stringify(tripItemRelationship),	
+				})
+		}
+	
+		function editTrip( field, value ) {
+					var trip = new Object()
+					trip[field] = value;
+					$.ajax({
+						type: "PATCH",
+						url: "/api/v1/trip/{{trip.id}}/",
+						contentType: "application/json",
+						dataType: "application/json",
+						data: JSON.stringify(trip),	
+					})
+					return value;	
+		}
+		
+		{% if is_owner %}
+		
+		$('#trip_description').editable(function(value, settings){
+			return editTrip('description', value );
+			
+		}, { 
+			type: "textarea",
+			cssclass: "description_input",
+			submit: "Ok",
+			cancel: "Cancel"
+		});
+		
+		$('#trip_name').editable(function(value, settings){
+			return editTrip('name', value );
+		});
+		{% endif %}
+</script>
+{% endblock %}
+

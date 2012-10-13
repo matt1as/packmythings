@@ -1,0 +1,17 @@
+{% extends "main_1cols.html"%}
+{% load analytics %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block head_title %}{% endblock head_title %}</title>
+  </head>
+  <body>
+	{% cms_toolbar %}
+	{% block center_content %}
+    {% block content %}
+    {% endblock content %}
+	{%endblock %}
+	 {% analytics %}
+  </body>
+</html>

@@ -1,0 +1,6 @@
+    <h2>Top trips</h2>
+    <ul>
+        {% for trip in top_trips %}
+            <li><a href="/web/trip/{{trip.id}}">{{ trip.name }}</a></li>
+        {% endfor %}
+    </ul>

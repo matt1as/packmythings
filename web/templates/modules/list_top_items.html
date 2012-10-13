@@ -1,0 +1,5 @@
+    <ul>
+        {% for trip in top_trips %}
+            <li><a href="{{trip.id}}">{{ trip.name }}</a></li>
+        {% endfor %}
+    </ul>

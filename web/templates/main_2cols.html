@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% block fluidcontent %}
+    
+        <div class="span9">
+          <div class="row-fluid">
+            <div class="span5">
+            {% block left_content %}{% endblock %}
+            </div><!--/span-->
+            <div class="span4">
+				{% block right_content %}{% endblock %}
+            </div><!--/span-->
+          </div><!--/row-->
+         
+        </div><!--/span-->
+      </div><!--/row-->
+{% endblock %}
+   

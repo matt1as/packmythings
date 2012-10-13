@@ -1,0 +1,23 @@
+INSTALLATION INSTRUCTIONS
+1) Install Python >2.7
+2) Install django_cms
+	sudo pip install django_cms
+
+3) Install dependencies
+	sudo pip install django-registration
+	sudo pip install south
+
+4) copy packmythings/local_settings.template to packmythings/local_settings.py
+
+5) Update packmythings/local_settings.py with database and email settings, minimum path to db file	
+
+5) Add dev.packmythings to host file
+
+5) Start server 
+	python manage.py runserver http://dev.packmythings.com:8000/
+
+Browse to site
+	http://dev.packmythings.com:8000
+
+To browse json api go to 
+	http://dev.packmythings.com:8000/api/v1/?format=json

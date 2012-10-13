@@ -1,0 +1,8 @@
+{% if user.is_authenticated %}
+<h2>My trips</h2>
+    <ul>
+        {% for trip in my_trips %}
+            <li><a href="/web/trip/{{trip.id}}">{{ trip.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}

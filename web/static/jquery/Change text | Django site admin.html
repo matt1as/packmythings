@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en-us" >
+<head>
+<title>Change text | Django site admin</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+
+
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.js"></script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+
+<body class="web-text change-form">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name">Django administration</h1>
+
+        </div>
+        
+        <div id="user-tools">
+            Welcome,
+            <strong>admin</strong>.
+            
+                
+                
+                <a href="/admin/password_change/">Change password</a> /
+                <a href="/admin/logout/">Log out</a>
+            
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+<div class="breadcrumbs">
+<a href="/admin/">Home</a>
+&rsaquo; <a href="/admin/web/">Web</a>
+&rsaquo; <a href="/admin/web/text/">Texts</a>
+&rsaquo; welcome_anonymous
+</div>
+
+    
+
+    
+        
+    
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        <h1>Change text</h1>
+        <div id="content-main">
+
+
+  <ul class="object-tools">
+    
+    <li><a href="history/" class="historylink">History</a></li>
+    
+    
+  </ul>
+
+
+<form enctype="multipart/form-data" action="" method="post" id="text_form"><div style='display:none'><input type='hidden' name='csrfmiddlewaretoken' value='gkXKACNgzZX9kbNW8ItUIiyuxdtAQwFz' /></div>
+<div>
+
+
+
+
+
+
+  <fieldset class="module aligned ">
+    
+    
+    
+        <div class="form-row field-key">
+            
+            
+                <div>
+                    
+                    
+                        <label for="id_key" class="required">Name:</label>
+                        
+                            <input name="key" value="welcome_anonymous" class="vTextField" maxlength="200" type="text" id="id_key" />
+                        
+                    
+                    
+                </div>
+            
+        </div>
+    
+        <div class="form-row field-content">
+            
+            
+                <div>
+                    
+                    
+                        <label for="id_content" class="required">Text:</label>
+                        
+                            <textarea id="id_content" rows="10" cols="40" name="content" class="vLargeTextField">Pack my things helps you pack for your trip by showing you what others in the same situation have packed.</textarea>
+                        
+                    
+                    
+                </div>
+            
+        </div>
+    
+        <div class="form-row field-page">
+            
+            
+                <div>
+                    
+                    
+                        <label for="id_page" class="required">Page:</label>
+                        
+                            <select name="page" id="id_page">
+<option value="">---------</option>
+<option value="1" selected="selected">start</option>
+<option value="2">trip/detail</option>
+</select>
+                        
+                    
+                    
+                </div>
+            
+        </div>
+    
+</fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="submit-row">
+<input type="submit" value="Save" class="default" name="_save" />
+<p class="deletelink-box"><a href="delete/" class="deletelink">Delete</a></p>
+
+<input type="submit" value="Save and add another" name="_addanother"  />
+<input type="submit" value="Save and continue editing" name="_continue" />
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+(function($) {
+    var field;
+
+
+})(django.jQuery);
+</script>
+
+
+</div>
+</form></div>
+
+        
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>

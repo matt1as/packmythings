@@ -1,0 +1,88 @@
+/* @override http://localhost:8000/static/style.css */
+
+li {
+	list-style-type: none;
+}
+
+/* Only create two columns if width > 960px */
+@media screen and (min-width: 960px) {
+	ul#items li {
+		width: 50%;
+		float: left;
+
+	}
+}
+
+div.hero-unit {
+	background-image: url(http://farm9.staticflickr.com/8308/7976164349_078ca86f85_b.jpg); 
+	color: white;
+}
+
+a {
+	color: black!important;
+}
+
+a.brand {
+	color: #bbbbbb!important;
+}
+
+.nav-header {
+	color: black!important;
+}
+#trip_name {
+	cursor: pointer;
+}
+
+#trip_description {
+	display: block;
+	cursor: pointer;
+}
+
+.ui-autocomplete { position: absolute; cursor: default; }	
+
+/* workarounds */
+* html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
+
+.ui-menu {
+	list-style:none;
+	padding: 2px;
+	margin: 0;
+	display:block;
+	float: left;
+}
+.ui-menu .ui-menu {
+	margin-top: -3px;
+}
+.ui-menu .ui-menu-item {
+	margin:0;
+	padding: 0;
+	zoom: 1;
+	float: left;
+	clear: left;
+	width: 100%;
+}
+.ui-menu .ui-menu-item a {
+	text-decoration:none;
+	display:block;
+	padding:.2em .4em;
+	line-height:1.5;
+	zoom:1;
+}
+.ui-menu .ui-menu-item a.ui-state-hover,
+.ui-menu .ui-menu-item a.ui-state-active {
+	font-weight: normal;
+	margin: -1px;
+}
+
+ul#popular_items{
+	margin: 0pt;
+}
+
+ul#items {
+	margin: 0pt;
+}
+
+ul#all_items {
+	margin-left: 0pt;
+	margin-top: 10pt;
+}

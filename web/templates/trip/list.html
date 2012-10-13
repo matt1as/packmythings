@@ -1,0 +1,16 @@
+{% extends "main_1cols.html" %}
+{% block title %}
+  Trips
+{% endblock %}
+
+{% block center_content %}
+<H1>Help</H1>
+<p>
+{% if user.is_authenticated %}
+
+	Please choose one of your trips, or start a new trip.
+	{%else%}
+	Pack my things helps you pack for your trip by showing you what others in the same situation have packed.
+	{% endif %}
+	</p>
+{% endblock %}

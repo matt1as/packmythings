@@ -1,0 +1,14 @@
+{% extends "main_1cols.html" %}
+{% load cms_tags menu_tags %}
+{% block title %}
+  Start
+{% endblock %}
+
+{% block center_content %}
+
+	{% if user.is_authenticated %}
+		{% placeholder name='welcome_loggedin' %}
+	{%else%}
+		{% placeholder name='welcome_anonymous' %}
+	{% endif %}
+{% endblock %}

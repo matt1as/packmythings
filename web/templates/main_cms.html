@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+{% load cms_tags sekizai_tags %}
+
+
+ {% block fluidcontent %}
+ 	    <div class="span9">
+          <div class="row-fluid">
+            <div class="span9">
+            {% placeholder "main" %}
+            </div><!--/span-->
+          </div><!--/row-->
+         
+        </div><!--/span-->
+    
+{% endblock %}
