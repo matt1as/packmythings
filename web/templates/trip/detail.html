@@ -41,15 +41,12 @@
   </ul>
 	{% if is_owner%}
 <hr/>
-	<ul id="all_items">
-		<!--	<H3>Add Item</H3>
-			Search for an item to add, or add your own.-->
-			<input id="search_items_input" name="search_items_input"/>
-			<i class="icon-plus-sign button add_item_image" id="add_item_image"	></i>
+
+			<input id="search_items_input" name="search_items_input" class="pull-left"/>
+			<i class="icon-plus-sign button add_item_image" id="add_item_image"	class="pull_right"></i>
 			<input type="hidden" id="search_item_id" name="search_item_id">		
-	</ul>
 	{% endif %}
-	</div>>
+	</div>
 	{% endblock %}
 	{% block right_content %}
     <div class="well unit-bg">
@@ -182,7 +179,7 @@ function TripViewModel() {
 					}
 				});
 
-		$(".add_item_image").click(function() {
+		$(".api").click(function() {
 			var element = $(this);
 			var item_uri = $('#search_item_id').val();
 

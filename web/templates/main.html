@@ -16,7 +16,7 @@
     <!-- Le styles -->
     <!--link href="{{ STATIC_URL }}style.css" rel="stylesheet"/-->
 
-	<!--link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" /-->
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/base/jquery-ui.css" rel="stylesheet" />
     <!--link href="http://current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css" rel="stylesheet" /-->
    <link href="/static/dealstrap/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/dealstrap/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
@@ -123,20 +123,27 @@
 	
 	            </ul>
 	          </div><!--/.well -->
-	  		<div id="news" class="well sidebar-nav hidden-phone unit-bg">		
+			<div id="news" class="well sidebar-nav hidden-phone unit-bg">		
 			</div>
-	        </div><!--/span-->
+		</div><!--/span-->
    		{% block fluidcontent %}
 
 		{%endblock %}
-		</div>
-	   <hr>
-    
-	      <footer>
-	        <p>&copy; Bryderi 2012</p>
-	      </footer>
+	
+		<div class="row unit-block">
+			<div class="span9 pull-right unit-bg">
+				<div class="unit footer">
+					<ul class="pull-right">
+					{% show_menu_below_id "top" %}       
+			   	 	</ul>
+					<span class="copyright">&copy; 2012 Bryderi. All rights reserved.</span>
+					</ul>
+				</div>
+			</div >
+			</div>
 
-	    </div><!--/.fluid-container-->
+		</div>
+	</div><!--/.fluid-container-->
 </div>
 
 	    <!-- Le javascript
