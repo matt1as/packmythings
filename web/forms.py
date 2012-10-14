@@ -17,7 +17,7 @@ class TripForm(ModelForm):
     	
 	class Meta:
 		model = Trip
-		exclude = ('items', 'owner')		
+		exclude = ('items', 'members')		
 		
 
 #Create the form class.
