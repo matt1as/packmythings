@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from web.models import Trip, Item
 from web.forms import TripForm, ItemForm, UserForm
 from web.views import TripDetailView, TripCreateView, StartView
-from web.base_views import BaseUpdateView, BaseTemplateView
+#from web.base_views import BaseUpdateView, BaseTemplateView
 
 
 v1_api = Api(api_name='v1')
