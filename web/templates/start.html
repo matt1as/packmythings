@@ -6,5 +6,9 @@
 
 {% block center_content %}
 
-
+	{% if user.is_authenticated %}
+		{% placeholder name='welcome_loggedin' %}
+	{%else%}
+		{% placeholder name='welcome_anonymous' %}
+	{% endif %}
 {% endblock %}
