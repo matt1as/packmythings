@@ -18,6 +18,11 @@
 {% placeholder "create_trip" %}
 </div>
 {% endblock %}
+
+{% block top_content %}
+	{% placeholder "main" %}
+{% endblock %}
+
 {% block scripts %}  
 	<script>
 	var input = document.getElementById('id_destination');

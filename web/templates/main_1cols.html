@@ -3,6 +3,15 @@
  {% block fluidcontent %}
     
         <div class="span9">
+			  <div class="row-fluid">
+	            <div class="span9">
+					<div class="well unit-bg">
+	            		{% block top_content %}{% endblock %}
+					</div>
+	            </div><!--/span-->
+	          </div><!--/row-->
+		
+	
           <div class="row-fluid">
             <div class="span9">
             {% block center_content %}{% endblock %}
