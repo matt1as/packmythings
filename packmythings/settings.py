@@ -1,13 +1,13 @@
 # Django settings for packmythings project.
 TEMPLATE_CONTEXT_PROCESSORS = {
-	"django.contrib.auth.context_processors.auth",
-	"django.core.context_processors.debug",
-	"django.core.context_processors.i18n",
-	"django.core.context_processors.media",
-	"django.core.context_processors.static",
-	"django.core.context_processors.tz",
-	"django.core.context_processors.request",
-	"django.contrib.messages.context_processors.messages",
+	'django.contrib.auth.context_processors.auth',
+	'django.core.context_processors.debug',
+	'django.core.context_processors.i18n',
+	'django.core.context_processors.media',
+	'django.core.context_processors.static',
+	'django.core.context_processors.tz',
+	'django.core.context_processors.request',
+	'django.contrib.messages.context_processors.messages',
 	'social_auth.context_processors.social_auth_by_name_backends',
     'social_auth.context_processors.social_auth_backends',
     'social_auth.context_processors.social_auth_by_type_backends',
@@ -17,22 +17,22 @@ TEMPLATE_CONTEXT_PROCESSORS = {
 }
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/home/media/media.lawrence.com/media/"
+# Example: '/home/media/media.lawrence.com/media/'
 MEDIA_ROOT = ''
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
-# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
+# Examples: 'http://media.lawrence.com/media/', 'http://example.com/media/'
 MEDIA_URL = ''
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/home/media/media.lawrence.com/static/"
+# in apps' 'static/' subdirectories and in STATICFILES_DIRS.
+# Example: '/home/media/media.lawrence.com/static/'
 STATIC_ROOT = ''
 
 # URL prefix for static files.
-# Example: "http://media.lawrence.com/static/"
+# Example: 'http://media.lawrence.com/static/'
 STATIC_URL = '/static/'
 
 
@@ -103,36 +103,23 @@ ROOT_URLCONF = 'packmythings.urls'
 WSGI_APPLICATION = 'packmythings.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like '/home/html/django_templates' or 'C:/www/django/templates'.
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
 
 
 INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'south',
-    'web',
-    # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    'django.contrib.admindocs',
-	#'registration',
-#    'allauth',
-#    'allauth.account',
-#    'allauth.socialaccount',
-#    'allauth.socialaccount.providers.facebook',
-#    'allauth.socialaccount.providers.google',
-#    'allauth.socialaccount.providers.github',
-#    'allauth.socialaccount.providers.linkedin',
-#    'allauth.socialaccount.providers.openid',
-#    'allauth.socialaccount.providers.twitter',
-#    'emailconfirmation',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.sites',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'south',
+	'web',
+	'django.contrib.admin',
+#    'django.contrib.admindocs',
 	'social_auth',
 	'cms',
 	'menus',
@@ -191,7 +178,11 @@ LOGGING = {
 }
 
 
-AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', "social_auth.backends.facebook.FacebookBackend", "social_auth.backends.twitter.TwitterBackend", "social_auth.backends.google.GoogleBackend"  )
+AUTHENTICATION_BACKENDS = (
+	'django.contrib.auth.backends.ModelBackend', 
+	'social_auth.backends.facebook.FacebookBackend', 
+	'social_auth.backends.twitter.TwitterBackend', 
+	'social_auth.backends.google.GoogleBackend'  )
 
 TINYMCE_JS_URL = STATIC_URL + 'tiny_mce/tiny_mce.js'
 TINYMCE_JS_ROOT = '/tiny_mce'
@@ -218,10 +209,9 @@ CMS_TEMPLATES = (
     ('main_cms.html', 'Main page with one column'),
 )
 
-
 # Additional locations of static files
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Put strings here, like '/home/html/static' or 'C:/www/django/static'.
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
