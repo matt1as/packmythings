@@ -1,6 +1,6 @@
 # Django settings for packmythings project.
 # Please make local changes to local_settings.py
-TEMPLATE_CONTEXT_PROCESSORS = {
+TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.contrib.auth.context_processors.auth',
 	'django.core.context_processors.debug',
 	'django.core.context_processors.i18n',
@@ -15,7 +15,7 @@ TEMPLATE_CONTEXT_PROCESSORS = {
     'social_auth.context_processors.social_auth_login_redirect',
 	'cms.context_processors.media',
 	'sekizai.context_processors.sekizai',
-}
+)
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: '/home/media/media.lawrence.com/media/'
