@@ -1,9 +1,16 @@
 {% extends "main.html" %}
 {% block fluidcontent %}
+
         <div class="span9">
-          <div class="hero-unit">
-            {% block hero_content %}{% endblock %}
-          </div>
+         
+			<div class="row unit-block">
+				<div class="span9 unit-bg">
+					<div class="unit">
+						{% block hero_content %}{% endblock %}
+					</div>
+				</div>
+			</div>
+
           <div class="row-fluid">
             <div class="span4">
             {% block left_content %}{% endblock %}

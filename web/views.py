@@ -48,23 +48,23 @@ class TripCreateView(CreateView):
 
 class TripDetailView(DetailView):
 	def get_context_data(self, **kwargs):
-		queryset = UserSocialAuth.objects.filter(provider='facebook', user = self.request.user )
-		if queryset :
-			instance = queryset.get()
-			graph = facebook.GraphAPI(instance.tokens['access_token'])
-			profile = graph.get_object("me")
-			friends = graph.get_connections("me", "friends")['data']
-			friendsId = [x['id'] for x in friends]
-			pprint( "All Facebook Friends ")
-			pprint(friendsId)
-			friends_on_packmythings = UserSocialAuth.objects.filter(provider = 'facebook', uid__in=friendsId )
-			pprint("Friends on Pack My Things ")
-			pprint(friends_on_packmythings )
+#		queryset = UserSocialAuth.objects.filter(provider='facebook', user = self.request.user )#
+#		if queryset :#
+#			instance = queryset.get()
+#			graph = facebook.GraphAPI(instance.tokens['access_token'])
+#			profile = graph.get_object("me")
+#			friends = graph.get_connections("me", "friends")['data']
+#			friendsId = [x['id'] for x in friends]
+#			pprint( "All Facebook Friends ")
+#			pprint(friendsId)
+#			friends_on_packmythings = UserSocialAuth.objects.filter(provider = 'facebook', uid__in=friendsId )
+#			pprint("Friends on Pack My Things ")
+#			pprint(friends_on_packmythings )
 
-		tripMembers =  TripUserRelationship.objects.filter( trip = self.object, user = self.request.user)
+		tripMembers =  TripUserRelationship.objects.filter( trip = self.object, user = self.request.user.id).all()
 		context = super(TripDetailView, self).get_context_data(**kwargs)
 		trips_of_type = Trip.objects.filter( type_of_trip = self.object.type_of_trip)
-		context['items'] = TripItemRelationship.objects.filter(trip=self.object, owner=self.request.user).distinct()
+		context['items'] = TripItemRelationship.objects.filter(trip=self.object, owner=self.request.user.id).distinct()
 		context['all_items'] = Item.objects.all().exclude( trip = self.object )
 		context['popular_items'] = Item.objects.filter(trip__in = trips_of_type).exclude( trip = self.object).annotate(num_trips=Count('trip')).order_by('-num_trips')
 		context['texts'] = dict(((text.key, text.content) for text in Text.objects.filter( page__key = 'trip/detail' )))

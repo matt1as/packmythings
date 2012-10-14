@@ -14,24 +14,16 @@
 {% endblock %}
 
 {% block hero_content %}
-	<div class="page-header"><h1 id="trip_name">{{trip.name}}</h1></div>
-	<h2>{{trip.destination}}</h2>
-	<span id="trip_description">{{trip.description}}</span>
-	<!-- AddThis Button BEGIN -->
-	<div class="addthis_toolbox addthis_default_style ">
-	<a class="addthis_button_preferred_1"></a>
-	<a class="addthis_button_preferred_2"></a>
-	<a class="addthis_button_preferred_3"></a>
-	<a class="addthis_button_preferred_4"></a>
-	<a class="addthis_button_compact"></a>
-	<a class="addthis_counter addthis_bubble_style"></a>
-	</div>
+	<legend id="trip_name">{{trip.name}}</legend>
 	<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-5038990545bff28e"></script>
 	<!-- AddThis Button END -->
 {% endblock %}
 {% block left_content %}
 <div class="well unit-bg">
 	{{texts.name }}
+	<div class="caption">
+		<h4>Your Items</h4>
+	</div>
   <ul id="items" data-bind="foreach: items">
 		<li>
 			{% if is_owner%}
@@ -69,9 +61,9 @@
 	{% block center_content %}
 	<div class="well unit-bg">
 	{% if is_owner%}
-
-	<H3>Suggested Items for your trip</H3>
-
+	<div class="caption">
+		<h4>Suggested Items</h4>
+	</div>
 	<ul id="popular_items" data-bind="foreach: popular_items">
 		<li><i  class="icon-plus-sign" data-bind="click: $root.moveFromPopularItem"></i> <span data-bind="text: name" /></li	>
 	</ul>

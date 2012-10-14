@@ -41,7 +41,7 @@ class TypeOfTripResource(ModelResource):
            
 class TripResource(ModelResource):
 	item  = fields.ToManyField( ItemResource, 'items', full=True )
-	owner = fields.ForeignKey( UserResource, 'owner' )
+	#owner = fields.ForeignKey( UserResource, 'owner' )
 	type_of_trip = fields.ForeignKey( TypeOfTripResource, 'type_of_trip' )
 		
 	class Meta:
@@ -49,7 +49,7 @@ class TripResource(ModelResource):
 		authorization = DjangoAuthorization()
 		filtering = { 
 			'name': ALL,
-			'owner': ALL,
+			#'owner': ALL,
 			'length': ALL,
 			'type_of_trip': ALL,
 	}
