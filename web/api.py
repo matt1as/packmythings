@@ -69,12 +69,12 @@ class TripItemRelationshipResource(ModelResource):
 	def obj_create(self, bundle, request, **kwargs):
 		return super(TripItemRelationshipResource, self).obj_create(bundle, request, owner=request.user)
 
-#	def hydrate_owner(self, bundle):
-#		bundle.data['owner'] =  '/api/v1/user/' + self.request.user
-#		return bundle
+	def hydrate_owner(self, bundle):
+		bundle.data['owner'] =  '/api/v1/user/' + self.request.user
+		return bundle
 	
 	class Meta:
-#		authorization = Authorization()
+		authorization = Authorization()
 		queryset = TripItemRelationship.objects.all()
 	
 #	def apply_authorization_limits(self, request, object_list):
