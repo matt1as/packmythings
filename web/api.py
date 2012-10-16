@@ -74,7 +74,7 @@ class TripItemRelationshipResource(ModelResource):
 		return bundle
 	
 	class Meta:
-		authorization = Authorization()
+#		authorization = Authorization()
 		queryset = TripItemRelationship.objects.all()
 	
 #	def apply_authorization_limits(self, request, object_list):
