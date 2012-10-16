@@ -73,7 +73,7 @@ class TripItemRelationshipResource(ModelResource):
 #		bundle.data['owner'] =  '/api/v1/user/' + self.request.user
 #		return bundle
 	
-#	class Meta:
+	class Meta:
 #		authorization = Authorization()
 		queryset = TripItemRelationship.objects.all()
 	
