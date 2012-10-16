@@ -73,19 +73,19 @@ class TripItemRelationshipResource(ModelResource):
 #		bundle.data['owner'] =  '/api/v1/user/' + self.request.user
 #		return bundle
 	
-	class Meta:
-		authorization = OwnerAuthorization()
+#	class Meta:
+#		authorization = Authorization()
 		queryset = TripItemRelationship.objects.all()
 	
-	def apply_authorization_limits(self, request, object_list):
-		if object_list._result_cache is not None:
-			self._pre_limits = len(object_list._result_cache)
-		else:
-			self._pre_limits = 0
-			# Just to demonstrate the per-resource hooks.
-			new_object_list = super(TripItemRelationshipResource, self).apply_authorization_limits(request, object_list)
-		if object_list._result_cache is not None:
-			self._post_limits = len(object_list._result_cache)
-		else:
-			self._post_limits = 0
-			return new_object_list
+#	def apply_authorization_limits(self, request, object_list):
+#		if object_list._result_cache is not None:
+#			self._pre_limits = len(object_list._result_cache)
+#		else:
+#			self._pre_limits = 0
+#			# Just to demonstrate the per-resource hooks.
+#			new_object_list = super(TripItemRelationshipResource, self).apply_authorization_limits(request, object_list)
+#		if object_list._result_cache is not None:
+#			self._post_limits = len(object_list._result_cache)
+#		else:
+#			self._post_limits = 0
+#			return new_object_list
