@@ -5,16 +5,28 @@ INSTALLATION INSTRUCTIONS
 
 3) Install dependencies
 	sudo pip install django-registration
+	sudo pip install django_google_analytics
+	sudo pip install django_disqus
+	sudo pip install django_filer
+	sudo pip install django_cmsplugin_contact
+	sudo pip install django_allauth	
 	sudo pip install south
+	sudo pip install easy_thumbnail
+	sudo pip install facebook
+	
 
 4) copy packmythings/local_settings.template to packmythings/local_settings.py
 
-5) Update packmythings/local_settings.py with database and email settings, minimum path to db file	
+5) Update packmythings/local_settings.py with database and email settings, minimum path to db file
+
+6) Create database
+	  ./manage syncdb
+	  ./manage migrate
 
 5) Add dev.packmythings to host file
 
 5) Start server 
-	python manage.py runserver http://dev.packmythings.com:8000/
+	./manage.py runserver dev.packmythings.com:8000
 
 Browse to site
 	http://dev.packmythings.com:8000

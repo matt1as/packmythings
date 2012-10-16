@@ -9,4 +9,4 @@ class TripSitemap(Sitemap):
         return Trip.objects.all()
    
     def location( self, obj):
-      return '/web/trip/' + str( obj.id )
+      return '/web/trip/ ' + str( obj.id )

@@ -1,9 +1,13 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, RedirectView, FormView, TemplateView
+
 from web.api import UserResource, TripResource, ItemResource, TypeOfTripResource, TripItemRelationshipResource, PopularItemResource
+from web.sitemap import TripSitemap
 from tastypie.api import Api
 from django.views.generic.simple import direct_to_template, redirect_to
+
+from cms.sitemaps import CMSSitemap
 
 import allauth
 import social_auth
@@ -33,4 +37,7 @@ urlpatterns = patterns('',
 	
 #---------- CMS -----------------------
 	url(r'^', include('cms.urls')),
+	
+#--------- SITEMAP --------------------
+	url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': {'cmspages': CMSSitemap, 'trips': TripSitemap} }),
 )

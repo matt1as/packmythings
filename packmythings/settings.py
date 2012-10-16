@@ -135,7 +135,8 @@ INSTALLED_APPS = (
 	'filer',
 	'easy_thumbnails',
 	'disqus',
-	'google_analytics'
+	'google_analytics',
+	'django.contrib.sitemaps'
 )
 
 GOOGLE_ANALYTICS_MODEL = True
