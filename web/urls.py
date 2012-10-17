@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView, CreateView, DetailView, ListView
 
-from web.api import UserResource, TripResource, ItemResource, TypeOfTripResource, TripItemRelationshipResource, PopularItemResource
+from web.api import UserResource, TripResource, ItemResource, TypeOfTripResource, TripItemRelationshipResource, TripUserRelationshipResource, PopularItemResource
 from tastypie.api import Api
 from django.contrib.auth.decorators import login_required
 
@@ -19,6 +19,7 @@ v1_api.register(TripResource())
 v1_api.register(ItemResource())
 v1_api.register(TypeOfTripResource())
 v1_api.register(TripItemRelationshipResource())
+v1_api.register(TripUserRelationshipResource())
 v1_api.register(PopularItemResource())
 
 urlpatterns = patterns('',

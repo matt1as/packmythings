@@ -1,5 +1,5 @@
 
-{% extends "main_hero_3cols.html" %}
+{% extends "main_hero_1cols.html" %}
 {% load cms_tags sekizai_tags disqus_tags %}
 {% block title %}
   {{ object.name }}
@@ -15,58 +15,90 @@
 
 {% block hero_content %}
 	<legend id="trip_name">{{trip.name}}</legend>
-	<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-5038990545bff28e"></script>
-	<!-- AddThis Button END -->
-{% endblock %}
-{% block left_content %}
-<div class="well unit-bg">
-	{{texts.name }}
-	<div class="caption">
-		<h4>Your Items</h4>
-	</div>
-  <ul id="items" data-bind="foreach: items">
-		<li>
-			{% if is_owner%}
-			<input type="checkbox" data-bind="checked: is_packed, click: $root.setPacked" />
-			<i class="icon-minus-sign" data-bind="click: $root.removeItem" ></i> 
-			{% endif %}
-			<span data-bind="text: quantity"></span>
-			{% if is_owner%}
-			
-			<i class="icon-plus-sign" data-bind="click: $root.increaseQuantity" ></i> 
-			{% endif %}
-			<span data-bind="text: name">
-			</span>
-		</li>
-  </ul>
-	{% if is_owner%}
-<hr/>
-
-			<input id="search_items_input" name="search_items_input" class="pull-left"/>
-			<i class="icon-plus-sign button add_item_image" id="add_item_image"	class="pull_right"></i>
-			<input type="hidden" id="search_item_id" name="search_item_id">		
-	{% endif %}
-	</div>
-	{% endblock %}
-	{% block right_content %}
-    <div class="well unit-bg">
-		{% disqus_dev %}
-		{% disqus_show_comments %}
-
-		</div>
-	{% endblock %}
-	{% block center_content %}
-	<div class="well unit-bg">
-	{% if is_owner%}
-	<div class="caption">
-		<h4>Suggested Items</h4>
-	</div>
-	<ul id="popular_items" data-bind="foreach: popular_items">
-		<li><i  class="icon-plus-sign" data-bind="click: $root.moveFromPopularItem"></i> <span data-bind="text: name" /></li	>
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#pack_list" data-toggle="tab">Pack List</a></li>
+	  	<li><a href="#description" data-toggle="tab">Description</a></li>
+	  	<li><a href="#members" data-toggle="tab">Members</a></li>
+	  	<li><a href="#map" data-toggle="tab">Map</a></li>
 	</ul>
-	{% endif %}
+{% endblock %}
+{% block center_content %}
+	<div class="tab-content">
+		<div class="tab-pane active" id="pack_list"><!-- Pack List -->
+			<div class="span4">
+				<div class="well unit-bg">
+					<div class="caption">
+						<h4>Your Items</h4>
+					</div>
+					<ul id="items" data-bind="foreach: items">
+						<li>
+							{% if is_owner%}
+							<input type="checkbox" data-bind="checked: is_packed, click: $root.setPacked" />
+							<i class="icon-minus-sign" data-bind="click: $root.removeItem" ></i> 
+							{% endif %}
+							<span data-bind="text: quantity"></span>
+							{% if is_owner%}
+							<i class="icon-plus-sign" data-bind="click: $root.increaseQuantity" ></i> 
+							{% endif %}
+							<span data-bind="text: name">
+							</span>
+						</li>
+					</ul>
+					{% if is_owner%}
+					<hr/>
+					<input id="search_items_input" name="search_items_input" class="pull-left"/>
+					<i class="icon-plus-sign button add_item_image" id="add_item_image"	class="pull_right"></i>
+					<input type="hidden" id="search_item_id" name="search_item_id">		
+					{% endif %}
+				</div>
+			</div><!--span -->
+
+			<div class="span4">
+				<div class="well unit-bg">
+					{% if is_owner%}
+					<div class="caption">
+						<h4>Suggested Items</h4>
+					</div>
+					<ul id="popular_items" data-bind="foreach: popular_items">
+						<li>
+							<i  class="icon-plus-sign" data-bind="click: $root.moveFromPopularItem"></i> 
+							<span data-bind="text: name" />
+						</li	>
+					</ul>
+					{% endif %}
+				</div>
+			</div><!--span -->
+
+			<div class="span4	">
+				<div class="well unit-bg">
+					{% disqus_dev %}
+					{% disqus_show_comments %}
+				</div>
+			</div><!--span -->
+		</div>
+		<div class="tab-pane" id="description"><!-- Description -->
+			<div class="span12 unit-bg">
+				{{trip.description}}
+			</div>
+		</div>
+		<div class="tab-pane" id="members"><!-- Members -->
+			<div class="span6 unit-bg">
+				<ul>
+				{% for member in trip.members.all%}
+					<li>{{member.first_name}} {{member.last_name}}</li>
+				{% endfor %}
+				</ul>
+			</div>
+			<div class="span6 unit-bg">
+				<ul>
+				{% for friend in friends%}
+					<li id="add_member">{{friend.user.first_name}} {{friend.user.last_name}} <img src="https://graph.facebook.com/{{friend.uid}}/picture"/></li>
+				{% endfor %}
+				</ul>
+			</div>
+		</div>
 	</div>
-	{% endblock %}
+{% endblock %}
 
 {% block scripts %}
 <script>
@@ -82,10 +114,15 @@ function Item(name, uri, relationsship_id, quantity, is_packed) {
 
 }
 
-
 // Model holding data for the view
 function TripViewModel() {
     var self = this;
+	
+	self.members = ko.observableArray([
+		{% for member in members%}
+			new User('{{item.name}}', '/api/v1/item/{{item.id}}/', ''),
+		{% endfor %}
+		]);
 	
 	// Populate initial popular items
 	self.popular_items = ko.observableArray([	
@@ -179,6 +216,8 @@ function TripViewModel() {
 					}
 				});
 
+		$("")
+
 		$(".add_item_image").click(function() {
 			var element = $(this);
 			var item_uri = $('#search_item_id').val();
@@ -217,6 +256,22 @@ function TripViewModel() {
 			$('#search_items_input').val("");
 			return false;
 		});
+	
+		function addMember( context, item, user) {
+			var json = new Object()
+			json['trip'] = '/api/v1/trip/'+trip.id
+			json['user'] = '/api/v1/user/'+user.id
+			var uri;
+			$.ajax({
+				type: "POST",
+				url: "/api/v1/tripitemrelationship/",
+				contentType: "application/json",
+				data: JSON.stringify(json),
+				success: function(xhr, txt, c){
+					echo(c);
+				},	
+			});
+		}
 	
 		function addItem( context, item, tripUri ) {
 				var json = new Object();

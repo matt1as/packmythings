@@ -59,6 +59,10 @@ class TripResource(ModelResource):
 #		typeOfTripRelationship = ItemTypeOfTripRelationsship.objects.filter(	typeOfTrip = self.type_of_trip)		
 #		return super(TripResource, self).obj_create(bundle, request)
 
+class TripUserRelationshipResource(ModelResource):
+	class Meta:
+		queryset = TripUserRelationship.objects.all()
+		
 
 class TripItemRelationshipResource(ModelResource):
 	item  = fields.ForeignKey( ItemResource, 'item' )
@@ -72,7 +76,6 @@ class TripItemRelationshipResource(ModelResource):
 #	def hydrate_owner(self, bundle):
 #		bundle.data['owner'] =  '/api/v1/user/' + self.request.user
 #		return bundle
-	
 	class Meta:
 		authorization = OwnerAuthorization()
 		queryset = TripItemRelationship.objects.all()
