@@ -22,6 +22,16 @@ class ItemResource(ModelResource):
 	  		'name': ALL, 
 		}
 		
+	def obj_create(self, bundle, request, **kwargs):
+		item = Item.objects.filter( name = bundle.data['name'] ).distinct()
+		print item
+		if( not item )  :
+			print "Creating object"
+			return super(ItemResource, self).obj_create(bundle, request, owner=request.user)
+		else:
+			print "Not creating object"
+			return item[0]
+		
 class PopularItemResource(ModelResource):
 	class Meta:
 		queryset = TypeOfTrip.objects.filter().annotate(num_trips=Count('trip')).order_by('-num_trips')
@@ -77,7 +87,7 @@ class TripItemRelationshipResource(ModelResource):
 #		bundle.data['owner'] =  '/api/v1/user/' + self.request.user
 #		return bundle
 	class Meta:
-		authorization = OwnerAuthorization()
+		authorization = Authorization()
 		queryset = TripItemRelationship.objects.all()
 	
 	def apply_authorization_limits(self, request, object_list):

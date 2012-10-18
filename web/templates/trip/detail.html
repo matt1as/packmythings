@@ -19,13 +19,12 @@
 		<li class="active"><a href="#pack_list" data-toggle="tab">Pack List</a></li>
 	  	<li><a href="#description" data-toggle="tab">Description</a></li>
 	  	<li><a href="#members" data-toggle="tab">Members</a></li>
-	  	<li><a href="#map" data-toggle="tab">Map</a></li>
 	</ul>
 {% endblock %}
 {% block center_content %}
 	<div class="tab-content">
 		<div class="tab-pane active" id="pack_list"><!-- Pack List -->
-			<div class="span4">
+			<div class="span6">
 				<div class="well unit-bg">
 					<div class="caption">
 						<h4>Your Items</h4>
@@ -46,14 +45,13 @@
 					</ul>
 					{% if is_owner%}
 					<hr/>
-					<input id="search_items_input" name="search_items_input" class="pull-left"/>
-					<i class="icon-plus-sign button add_item_image" id="add_item_image"	class="pull_right"></i>
-					<input type="hidden" id="search_item_id" name="search_item_id">		
+					<input id="search_items_input" data-bind="value: itemToAdd" class="pull-left"/>
+					<i class="icon-plus-sign button add_item_image pull_right" data-bind="click: $root.addItem"></i>
 					{% endif %}
 				</div>
 			</div><!--span -->
 
-			<div class="span4">
+			<div class="span6">
 				<div class="well unit-bg">
 					{% if is_owner%}
 					<div class="caption">
@@ -69,16 +67,13 @@
 				</div>
 			</div><!--span -->
 
-			<div class="span4	">
-				<div class="well unit-bg">
-					{% disqus_dev %}
-					{% disqus_show_comments %}
-				</div>
-			</div><!--span -->
+		
 		</div>
 		<div class="tab-pane" id="description"><!-- Description -->
-			<div class="span12 unit-bg">
-				{{trip.description}}
+			<div class="span12">
+				<div class="well unit-bg">
+					<span id="trip_description">{{trip.description}}</span>
+				</div>
 			</div>
 		</div>
 		<div class="tab-pane" id="members"><!-- Members -->
@@ -141,6 +136,7 @@ function TripViewModel() {
 		{% endfor %}
 		]);
 	
+	self.itemToAdd = ko.observable();
 	
 	// Removes item from item list, if quantity == 0 it is removed completely
 	self.removeItem = function(item) {
@@ -159,6 +155,10 @@ function TripViewModel() {
 	self.increaseQuantity = function( item ) {
 		item.quantity(item.quantity()+1);
 		updateItemRelationship( item );
+	}
+	
+	self.addItem = function(  ) {
+		var item = saveItem( self.itemToAdd  );
 	}
 	
 	// Saves the is packed flag to the server
@@ -185,78 +185,33 @@ function TripViewModel() {
 	var tmpName;
 	ko.applyBindings( tripModel );
 	
-		$( "#search_items_input" ).autocomplete({
-					source: function( request, response ) {
-						$.ajax({
-							url: "/api/v1/item/",
-							dataType: "jsonp",
-							data: {
-								name__contains: request.term
-							},
-							success: function( data ) {
-								response( $.map( data.objects, function( item ) {
-								return {
-									label: item.name,
-									value: item.name,
-									resource_uri: item.resource_uri	
-								}
-							}));
-							}
-						});
-					},
-					minLength: 2,
-					select: function( event, ui ) {
-						$('#search_item_id').val(ui.item.resource_uri);
-					},
-					open: function() {
-					
-					},
-					close: function() {
-						
-					}
-				});
+	$( "#search_items_input" ).autocomplete({
+		source: function( request, response ) {
+			$.ajax({
+				url: "/api/v1/item/",
+				dataType: "jsonp",
+				data: {
+					name__contains: request.term
+				},
+				success: function( data ) {
+					response( $.map( data.objects, function( item ) {
+						return {
+							label: item.name,
+							value: item.name,
+						}
+					}));
+				}
+			});
+		},
+		minLength: 2,
+		select: function( event, ui ) {
+		},
+		open: function() {	
+		},
+		close: function() {
+		}
+	});
 
-		$("")
-
-		$(".add_item_image").click(function() {
-			var element = $(this);
-			var item_uri = $('#search_item_id').val();
-
-			if(item_uri == "") {
-				var json = new Object();
-				var tmpName = $('#search_items_input').val();
-				json['name'] = $('#search_items_input').val();
-				$.ajax({
-					type: "POST",
-					url: "/api/v1/item/",
-					contentType: "application/json",
-					data: JSON.stringify(json),
-					success:function(xhr, txt, c){ 
-						var json = new Object();
-						var url = c.getResponseHeader('location');
-					
-							var a = document.createElement('a');
-							a.href = url;
-							var resource = a.pathname + a.search; // /file.php?id=1
-							resource_uri = resource; 
-							var name = tmpName;
-							
-							var item = new Item(name, resource_uri, '', 1, false );
-							
-						addItem(tripModel, item,  '/api/v1/trip/{{trip.id}}/');
-					},	
-				});
-			} else {
-				resource_uri = $('#search_item_id').val();
-				var name = jQuery.extend({}, $('#search_items_input').val());
-				var item = new Item( name, resource_uri, '', 1, false);
-				
-				addItem( tripModel,item, '/api/v1/trip/{{trip.id}}/');		
-			}
-			$('#search_items_input').val("");
-			return false;
-		});
-	
 		function addMember( context, item, user) {
 			var json = new Object()
 			json['trip'] = '/api/v1/trip/'+trip.id
@@ -273,6 +228,9 @@ function TripViewModel() {
 			});
 		}
 	
+		/**
+		 * Adds relationship between item and trip
+		 **/
 		function addItem( context, item, tripUri ) {
 				var json = new Object();
 				json['trip'] = tripUri;
@@ -294,8 +252,10 @@ function TripViewModel() {
 				});
 		}
 		
-		function removeItem( relationship_uri ) {
-				
+		/**
+		 * Removes relationship between item and trip
+		 **/
+		function removeItem( relationship_uri ) {	
 				$.ajax({
 				    type: "DELETE",
 				    url: relationship_uri,
@@ -304,6 +264,38 @@ function TripViewModel() {
 				});		
 		}
 		
+		/**
+		 * Saves item in database and creates a relationship to the current trip 
+		 **/
+		function saveItem( name ) {
+			var item = new Object();
+			item['name'] = name()
+			$.ajax({
+				type: "POST",
+				url: "/api/v1/item/",
+				contentType: "application/json",
+				data: JSON.stringify(item),
+				success: function(xhr, txt, c){
+					url = c.getResponseHeader('location');
+					var a = document.createElement('a');
+					a.href = url;
+					var resource = a.pathname + a.search; // /file.php?id=1
+				
+					
+					var item = new Item(name, resource, "", 1, false);
+					
+					item.resource_uri = resource;
+					item.name = name;
+					item.quantity = 1;
+					item.packed = false;
+					addItem(tripModel, item, '/api/v1/trip/{{trip.id}}/', 1);
+				}
+			});
+		}
+		
+		/** 
+		 * Updates relationship, ie quantity and is_packed
+		 **/
 		function updateItemRelationship( item ) {
 			var tripItemRelationship = new Object();
 			tripItemRelationship['quantity'] = item.quantity();
@@ -317,6 +309,9 @@ function TripViewModel() {
 				})
 		}
 	
+		/**
+		 * Edits trip properties 
+		 **/
 		function editTrip( field, value ) {
 					var trip = new Object()
 					trip[field] = value;
