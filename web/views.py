@@ -48,7 +48,7 @@ class TripCreateView(CreateView):
 
 class TripDetailView(DetailView):
 	def get_context_data(self, **kwargs):
-		queryset = UserSocialAuth.objects.filter(provider='facebook', user = self.request.user )#
+#		queryset = UserSocialAuth.objects.filter(provider='facebook', user = self.request.user )#
 		context = super(TripDetailView, self).get_context_data(**kwargs)
 #		if queryset :#
 #			instance = queryset.get()
