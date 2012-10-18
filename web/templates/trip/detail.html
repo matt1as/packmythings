@@ -18,6 +18,8 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#pack_list" data-toggle="tab">Pack List</a></li>
 	  	<li><a href="#description" data-toggle="tab">Description</a></li>
+	  	<li><a href="#discussion" data-toggle="tab">Discussion</a></li>
+	
 	</ul>
 {% endblock %}
 {% block center_content %}
@@ -75,6 +77,14 @@
 				</div>
 			</div>
 		</div>
+			<div class="tab-pane" id="discussion"><!-- Disqus -->
+				<div class="span12">
+					<div class="well unit-bg">
+						{% disqus_dev %}
+						{% disqus_show_comments %}
+					</div>
+				</div>
+			</div>
 	</div>
 {% endblock %}
 

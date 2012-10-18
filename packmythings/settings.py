@@ -125,9 +125,9 @@ INSTALLED_APPS = (
 	'menus',
 	'mptt',
 	'cms.plugins.text',
-	'cms.plugins.picture',
+#	'cms.plugins.picture',
 	'cms.plugins.link',
-	'cms.plugins.file',
+#	'cms.plugins.file',
 	'cms.plugins.snippet',
 	'cms.plugins.googlemap',
 	'sekizai',
@@ -136,7 +136,12 @@ INSTALLED_APPS = (
 	'easy_thumbnails',
 	'disqus',
 	'google_analytics',
-	'django.contrib.sitemaps'
+	'django.contrib.sitemaps',
+	'cmsplugin_filer_file',
+	'cmsplugin_filer_folder',
+	'cmsplugin_filer_image',
+	'cmsplugin_filer_teaser',
+#	'cmsplugin_filer_video',
 )
 
 GOOGLE_ANALYTICS_MODEL = True
