@@ -203,9 +203,9 @@ FACEBOOK_EXTENDED_PERMISSIONS = ['email']
 GOOGLE_OAUTH2_CLIENT_ID = '667492745451.apps.googleusercontent.com'
 GOOGLE_OAUTH2_CLIENT_SECRET = 'lqYZhhakfx8vQ6ZIhNJZ6Bi7'
 
-LOGIN_URL          = '/login-form/'
+LOGIN_URL          = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
-LOGIN_ERROR_URL    = '/login-error/'
+LOGIN_ERROR_URL    = '/accounts/login/'
 
 
 SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'

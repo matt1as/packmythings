@@ -74,6 +74,12 @@
 			<div class="span12">
 				<div class="well unit-bg">
 					<span id="trip_description">{{trip.description}}</span>
+					<!--><ul data-bind="foreach: hotels">
+						<li data-bind="text: name"></li>
+						<li data-bind="text: address"></li>
+						<img data-bind="attr: {src: thumbnail}" />
+						<a data-bind="attr: {href: deeplink}">Book Hotel</a>
+					</ul>-->
 				</div>
 			</div>
 		</div>
@@ -99,7 +105,14 @@ function Item(name, uri, relationsship_id, quantity, is_packed) {
 	self.resource_uri = uri;
 	self.is_packed = ko.observable(is_packed == "True");
 	self.quantity = ko.observable( quantity );
+}
 
+function Hotel(name, address, thumbnail, deeplink ) {
+	var self = this;
+	self.name = name;
+	self.address = address;
+	self.deeplink = deeplink;
+	self.thumbnail = "http://www.hotels.com" + thumbnail;
 }
 
 // Model holding data for the view
@@ -128,6 +141,8 @@ function TripViewModel() {
 						{{item.quantity}}, '{{item.packed}}'),
 		{% endfor %}
 		]);
+	
+	self.hotels = ko.observableArray();
 	
 	self.itemToAdd = ko.observable();
 	
@@ -177,6 +192,7 @@ function TripViewModel() {
 	var tripModel = new TripViewModel();
 	var tmpName;
 	ko.applyBindings( tripModel );
+	getHotels();
 	
 	$( "#search_items_input" ).autocomplete({
 		source: function( request, response ) {
@@ -316,6 +332,22 @@ function TripViewModel() {
 						data: JSON.stringify(trip),	
 					})
 					return value;	
+		}
+		
+		function getHotels() {
+			$.ajax({
+				type: "GET",
+				url: "http://api.ean.com/ean-services/rs/hotel/v3/list?cid=55505&apiKey=6m8j522wmbhref5ymc2s4pf3&city={{trip.destination}}&arrivalDate={{trip.startDate|date:"m/d/Y" }}&departureDate={{trip.endDate|date:"m/d/Y"}}",
+				contentType: "application/jsonp",
+				dataType: "jsonp",
+				success: function(xhr, txt, c){
+					var hotels = xhr.HotelListResponse.HotelList.HotelSummary	;
+					for( var i in hotels) {
+						var hotel = new Hotel( hotels[i].name, hotels[i].address1, hotels[i].thumbNailUrl, hotels[i].deepLink );
+						tripModel.hotels.push(hotel);
+					}
+				}
+			});
 		}
 		
 		{% if is_owner %}
