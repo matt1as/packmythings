@@ -267,9 +267,9 @@ function TripViewModel() {
 					
 					var item = new Item(name, resource, "", 1, false);
 					
-					item.resource_uri = resource;
-					item.name = name;
-					item.quantity = 1;
+					item.resource_uri = resource ;
+					item.name=name;
+					item.quantity(1);
 					item.packed = false;
 					addItem(tripModel, item, '/api/v1/trip/{{trip.id}}/', 1);
 				}
