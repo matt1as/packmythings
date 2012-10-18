@@ -18,7 +18,6 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#pack_list" data-toggle="tab">Pack List</a></li>
 	  	<li><a href="#description" data-toggle="tab">Description</a></li>
-	  	<li><a href="#members" data-toggle="tab">Members</a></li>
 	</ul>
 {% endblock %}
 {% block center_content %}
@@ -74,22 +73,6 @@
 				<div class="well unit-bg">
 					<span id="trip_description">{{trip.description}}</span>
 				</div>
-			</div>
-		</div>
-		<div class="tab-pane" id="members"><!-- Members -->
-			<div class="span6 unit-bg">
-				<ul>
-				{% for member in trip.members.all%}
-					<li>{{member.first_name}} {{member.last_name}}</li>
-				{% endfor %}
-				</ul>
-			</div>
-			<div class="span6 unit-bg">
-				<ul>
-				{% for friend in friends%}
-					<li id="add_member">{{friend.user.first_name}} {{friend.user.last_name}} <img src="https://graph.facebook.com/{{friend.uid}}/picture"/></li>
-				{% endfor %}
-				</ul>
 			</div>
 		</div>
 	</div>

@@ -50,14 +50,13 @@ class TripDetailView(DetailView):
 	def get_context_data(self, **kwargs):
 		queryset = UserSocialAuth.objects.filter(provider='facebook', user = self.request.user )#
 		context = super(TripDetailView, self).get_context_data(**kwargs)
-		if queryset :#
-			instance = queryset.get()
-			graph = facebook.GraphAPI(instance.tokens['access_token'])
-			profile = graph.get_object("me")
-			friends = graph.get_connections("me", "friends")['data']
-			friendsId = [x['id'] for x in friends]
-			friends_on_packmythings = UserSocialAuth.objects.filter(provider = 'facebook', uid__in=friendsId )
-			context["friends"] = friends_on_packmythings
+#		if queryset :#
+#			instance = queryset.get()
+#			graph = facebook.GraphAPI(instance.tokens['access_token'])
+#			profile = graph.get_object("me")
+#			friends = graph.get_connections("me", "friends")['data']
+#			friendsId = [x['id'] for x in friends]
+##			context["friends"] = friends_on_packmythings
 		tripMembers =  TripUserRelationship.objects.filter( trip = self.object, user = self.request.user.id).all()
 		trips_of_type = Trip.objects.filter( type_of_trip = self.object.type_of_trip)
 		context['items'] = TripItemRelationship.objects.filter(trip=self.object, owner=self.request.user.id).distinct()
