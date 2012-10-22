@@ -17,9 +17,10 @@
 	<legend id="trip_name">{{trip.name}}</legend>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#pack_list" data-toggle="tab">Pack List</a></li>
-	  	<li><a href="#description" data-toggle="tab">Description</a></li>
-	  	<li><a href="#discussion" data-toggle="tab">Discussion</a></li>
-	
+		<li><a href="#description" data-toggle="tab">Description</a></li>
+		<li><a href="#discussion" data-toggle="tab">Discussion</a></li>
+		<li><a href="#members" data-toggle="tab">Members</a></li>
+
 	</ul>
 {% endblock %}
 {% block center_content %}
@@ -117,21 +118,25 @@ function Hotel(name, address, thumbnail, deeplink ) {
 
 // Model holding data for the view
 function TripViewModel() {
-    var self = this;
-	
+	var self = this;
+
+	self.friends = ko.observableArray({% for friend in friends%}
+			{{friend}}
+		{% endfor %});
+
 	self.members = ko.observableArray([
 		{% for member in members%}
 			new User('{{item.name}}', '/api/v1/item/{{item.id}}/', ''),
 		{% endfor %}
 		]);
-	
+
 	// Populate initial popular items
 	self.popular_items = ko.observableArray([	
 		{% for item in popular_items%}
 			new Item('{{item.name}}', '/api/v1/item/{{item.id}}/', ''),
 		{% endfor %}
 		]);	
-	
+
 	// populate initial items
 	self.items = ko.observableArray([	
 		{% for item in items%}
@@ -181,18 +186,55 @@ function TripViewModel() {
 	}
 	
 	// Moves item from popular item to item list
-    self.moveFromPopularItem = function(item) { 
+	self.moveFromPopularItem = function(item) { 
 		self.popular_items.remove(item);
 		item.quantity(1);
 		addItem( self, item, '/api/v1/trip/{{trip.id}}/', 1);
 	}
+	
+	self.getFacebookFriends = function() {
+		$.ajax({
+			type: "GET",
+			url: "https://graph.facebook.com/me/friends?access_token={{access_token}}",
+			contentType: "application/jsonp",
+			dataType: "jsonp",
+			success: function(xhr, txt, c){
+				var friends = xhr.data;
+				for( var i in friends) {
+					
+					self.friends.push(friends[i]);
+				}
+			}
+		});
+	}
+	
+	/**
+	* Gets hotels from hotel.com
+	**/
+	self.getHotels = function() {
+		$.ajax({
+			type: "GET",
+			url: "http://api.ean.com/ean-services/rs/hotel/v3/list?cid=55505&apiKey=6m8j522wmbhref5ymc2s4pf3&city={{trip.destination}}&arrivalDate={{trip.startDate|date:"m/d/Y" }}&departureDate={{trip.endDate|date:"m/d/Y"}}",
+			contentType: "application/jsonp",
+			dataType: "jsonp",
+			success: function(xhr, txt, c){
+				var hotels = xhr.HotelListResponse.HotelList.HotelSummary	;
+				for( var i in hotels) {
+					var hotel = new Hotel( hotels[i].name, hotels[i].address1, hotels[i].thumbNailUrl, hotels[i].deepLink );
+					self.hotels.push(hotel);
+				}
+			}
+		});
+	}
+	
 }	
 
 
 	var tripModel = new TripViewModel();
 	var tmpName;
 	ko.applyBindings( tripModel );
-	getHotels();
+	tripModel.getHotels();
+	tripModel.getFacebookFriends();
 	
 	$( "#search_items_input" ).autocomplete({
 		source: function( request, response ) {
@@ -221,151 +263,152 @@ function TripViewModel() {
 		}
 	});
 
-		function addMember( context, item, user) {
-			var json = new Object()
-			json['trip'] = '/api/v1/trip/'+trip.id
-			json['user'] = '/api/v1/user/'+user.id
-			var uri;
-			$.ajax({
-				type: "POST",
-				url: "/api/v1/tripitemrelationship/",
-				contentType: "application/json",
-				data: JSON.stringify(json),
-				success: function(xhr, txt, c){
-					echo(c);
-				},	
-			});
-		}
+	function addMember( context, item, user) {
+		var json = new Object()
+		json['trip'] = '/api/v1/trip/'+trip.id
+		json['user'] = '/api/v1/user/'+user.id
+		var uri;
+		$.ajax({
+			type: "POST",
+			url: "/api/v1/tripitemrelationship/",
+			contentType: "application/json",
+			data: JSON.stringify(json),
+			success: function(xhr, txt, c){
+				echo(c);
+			},	
+		});
+	}
 	
-		/**
-		 * Adds relationship between item and trip
-		 **/
-		function addItem( context, item, tripUri ) {
-				var json = new Object();
-				json['trip'] = tripUri;
-				json['item'] = 	item.resource_uri;
-				var uri;
-				$.ajax({
-					type: "POST",
-					url: "/api/v1/tripitemrelationship/",
-					contentType: "application/json",
-					data: JSON.stringify(json),
-					success: function(xhr, txt, c){
-						url = c.getResponseHeader('location');
-						var a = document.createElement('a');
-						a.href = url;
-						var resource = a.pathname + a.search; // /file.php?id=1
-						item.relationship_uri = resource;
-						context.items.push( item );
-					},	
-				});
-		}
+	/**
+	* Adds relationship between item and trip
+	**/
+	function addItem( context, item, tripUri ) {
+		var json = new Object();
+		json['trip'] = tripUri;
+		json['item'] = 	item.resource_uri;
+		var uri;
+		$.ajax({
+			type: "POST",
+			url: "/api/v1/tripitemrelationship/",
+			contentType: "application/json",
+			data: JSON.stringify(json),
+			success: function(xhr, txt, c){
+				url = c.getResponseHeader('location');
+				var a = document.createElement('a');
+				a.href = url;
+				var resource = a.pathname + a.search; // /file.php?id=1
+				item.relationship_uri = resource;
+				context.items.push( item );
+			},	
+		});
+	}
 		
-		/**
-		 * Removes relationship between item and trip
-		 **/
-		function removeItem( relationship_uri ) {	
-				$.ajax({
-				    type: "DELETE",
-				    url: relationship_uri,
-					contentType: "application/json",
-				
-				});		
-		}
-		
-		/**
-		 * Saves item in database and creates a relationship to the current trip 
-		 **/
-		function saveItem( name ) {
-			var item = new Object();
-			item['name'] = name()
+	/**
+	* Removes relationship between item and trip
+	**/
+	function removeItem( relationship_uri ) {	
 			$.ajax({
-				type: "POST",
-				url: "/api/v1/item/",
+			    type: "DELETE",
+			    url: relationship_uri,
 				contentType: "application/json",
-				data: JSON.stringify(item),
-				success: function(xhr, txt, c){
-					url = c.getResponseHeader('location');
-					var a = document.createElement('a');
-					a.href = url;
-					var resource = a.pathname + a.search; // /file.php?id=1
+			
+			});		
+	}
+		
+	/**
+	* Saves item in database and creates a relationship to the current trip 
+	**/
+	function saveItem( name ) {
+		var item = new Object();
+		item['name'] = name()
+		$.ajax({
+			type: "POST",
+			url: "/api/v1/item/",
+			contentType: "application/json",
+			data: JSON.stringify(item),
+			success: function(xhr, txt, c){
+				url = c.getResponseHeader('location');
+				var a = document.createElement('a');
+				a.href = url;
+				var resource = a.pathname + a.search; // /file.php?id=1
+			
 				
-					
-					var item = new Item(name, resource, "", 1, false);
-					
-					item.resource_uri = resource ;
-					item.name=name;
-					item.quantity(1);
-					item.packed = false;
-					addItem(tripModel, item, '/api/v1/trip/{{trip.id}}/', 1);
-				}
-			});
-		}
+				var item = new Item(name, resource, "", 1, false);
+				
+				item.resource_uri = resource ;
+				item.name=name;
+				item.quantity(1);
+				item.packed = false;
+				addItem(tripModel, item, '/api/v1/trip/{{trip.id}}/', 1);
+			}
+		});
+	}
 		
-		/** 
-		 * Updates relationship, ie quantity and is_packed
-		 **/
-		function updateItemRelationship( item ) {
-			var tripItemRelationship = new Object();
-			tripItemRelationship['quantity'] = item.quantity();
-			tripItemRelationship['packed'] = item.is_packed();
-				$.ajax({
-					type: "PATCH",
-					url: item.relationship_uri,
-					contentType: "application/json",
-					dataType: "application/json",
-					data: JSON.stringify(tripItemRelationship),	
-				})
-		}
+	/** 
+	* Updates relationship, ie quantity and is_packed
+	**/
+	function updateItemRelationship( item ) {
+		var tripItemRelationship = new Object();
+		tripItemRelationship['quantity'] = item.quantity();
+		tripItemRelationship['packed'] = item.is_packed();
+		$.ajax({
+			type: "PATCH",
+			url: item.relationship_uri,
+			contentType: "application/json",
+			dataType: "application/json",
+			data: JSON.stringify(tripItemRelationship),	
+		})
+	}
 	
-		/**
-		 * Edits trip properties 
-		 **/
-		function editTrip( field, value ) {
-					var trip = new Object()
-					trip[field] = value;
-					$.ajax({
-						type: "PATCH",
-						url: "/api/v1/trip/{{trip.id}}/",
-						contentType: "application/json",
-						dataType: "application/json",
-						data: JSON.stringify(trip),	
-					})
-					return value;	
-		}
-		
-		function getHotels() {
-			$.ajax({
-				type: "GET",
-				url: "http://api.ean.com/ean-services/rs/hotel/v3/list?cid=55505&apiKey=6m8j522wmbhref5ymc2s4pf3&city={{trip.destination}}&arrivalDate={{trip.startDate|date:"m/d/Y" }}&departureDate={{trip.endDate|date:"m/d/Y"}}",
-				contentType: "application/jsonp",
-				dataType: "jsonp",
-				success: function(xhr, txt, c){
-					var hotels = xhr.HotelListResponse.HotelList.HotelSummary	;
-					for( var i in hotels) {
-						var hotel = new Hotel( hotels[i].name, hotels[i].address1, hotels[i].thumbNailUrl, hotels[i].deepLink );
-						tripModel.hotels.push(hotel);
-					}
+	/**
+	* Edits trip properties 
+	**/
+	function editTrip( field, value ) {
+		var trip = new Object()
+		trip[field] = value;
+		$.ajax({
+			type: "PATCH",
+			url: "/api/v1/trip/{{trip.id}}/",
+			contentType: "application/json",
+			dataType: "application/json",
+			data: JSON.stringify(trip),	
+		})
+	  return value;	
+	}
+	
+	/**
+	* Gets hotels from hotel.com
+	**/
+	function getHotels() {
+		$.ajax({
+			type: "GET",
+			url: "http://api.ean.com/ean-services/rs/hotel/v3/list?cid=55505&apiKey=6m8j522wmbhref5ymc2s4pf3&city={{trip.destination}}&arrivalDate={{trip.startDate|date:"m/d/Y" }}&departureDate={{trip.endDate|date:"m/d/Y"}}",
+			contentType: "application/jsonp",
+			dataType: "jsonp",
+			success: function(xhr, txt, c){
+				var hotels = xhr.HotelListResponse.HotelList.HotelSummary	;
+				for( var i in hotels) {
+					var hotel = new Hotel( hotels[i].name, hotels[i].address1, hotels[i].thumbNailUrl, hotels[i].deepLink );
+					tripModel.hotels.push(hotel);
 				}
-			});
-		}
-		
-		{% if is_owner %}
-		
+			}
+		});
+	}
+	
+	{% if is_owner %}
 		$('#trip_description').editable(function(value, settings){
 			return editTrip('description', value );
-			
 		}, { 
 			type: "textarea",
 			cssclass: "description_input",
 			submit: "Ok",
 			cancel: "Cancel"
 		});
-		
+	
 		$('#trip_name').editable(function(value, settings){
 			return editTrip('name', value );
 		});
-		{% endif %}
+	{% endif %}
 </script>
 {% endblock %}
 

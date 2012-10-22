@@ -4,7 +4,7 @@ from django.views.generic import TemplateView, CreateView, DetailView, ListView
 from web.api import UserResource, TripResource, ItemResource, TypeOfTripResource, TripItemRelationshipResource, TripUserRelationshipResource, PopularItemResource
 from tastypie.api import Api
 from django.contrib.auth.decorators import login_required
-
+from django.views.generic.simple import direct_to_template
 
 #--------------- Models and views--------------------
 from web.models import Trip, Item
