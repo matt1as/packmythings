@@ -64,6 +64,7 @@ class TripDetailView(DetailView):
 		context['popular_items'] = Item.objects.filter(trip__in = trips_of_type).exclude( trip = self.object).annotate(num_trips=Count('trip')).order_by('-num_trips')
 		context['texts'] = dict(((text.key, text.content) for text in Text.objects.filter( page__key = 'trip/detail' )))
 		context['access_token'] = instance.tokens['access_token']
+		context['members'] = tripMembers;
 		#context['friends'] = friends;
 		if len(tripMembers ) > 0 :
 			context['is_owner'] = tripMembers[0].owner

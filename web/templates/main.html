@@ -41,6 +41,7 @@
   </head>
 
   <body data-twttr-rendered="true">
+
 	{% if user.is_staff %}
 	{% cms_toolbar %}
 
@@ -69,6 +70,19 @@
 	     ref.parentNode.insertBefore(js, ref);
 	   }(document));
 	</script>
+ <p>
+      <input type="button"
+        onclick="sendRequestToRecipients(); return false;"
+        value="Send Request to Users Directly"
+      />
+      <input type="text" value="User ID" name="user_ids" />
+      </p>
+    <p>
+    <input type="button"
+      onclick="sendRequestViaMultiFriendSelector(); return false;"
+      value="Send Request to Many Users with MFS"
+    />
+    </p>
 
  	<div class="navbar navbar-static-top">
         <div class="container">
@@ -197,6 +211,29 @@
 	    </script>
 		{% render_block "js" %}
 		{% google_analytics %}
+		<script>
+	  
+
+	      function sendRequestToRecipients() {
+	        var user_ids = document.getElementsByName("user_ids")[0].value;
+	        FB.ui({method: 'apprequests',
+	          message: 'My Great Request',
+	          to: user_ids,
+			  redirect_uri: 'http://www.packmythings.com/login/facebook',
+	        }, requestCallback);
+	      }
+
+	      function sendRequestViaMultiFriendSelector() {
+	        FB.ui({method: 'apprequests',
+	          message: 'My Great Request',
+			  redirect_uri: 'http://www.packmythings.com/login/facebook'
+	        }, requestCallback);
+	      }
+
+	      function requestCallback(response) {
+console.log(response);
+	}
+	</script>
 	  </body>
 	
 	</html>

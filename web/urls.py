@@ -32,9 +32,6 @@ urlpatterns = patterns('',
 	
 	(r'^start/$', StartView.as_view( template_name = 'start.html')),
 	
-#------------ Robots.txt ---------------
-    (r'^robots\.txt$', direct_to_template,
-      {'template': 'robots.txt', 'mimetype': 'text/plain'}),
 #------------ Trip Views  --------------
     (r'^trip/(?P<pk>\d+)/$', TripDetailView.as_view(
         model=Trip,
