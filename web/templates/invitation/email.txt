@@ -1,0 +1,4 @@
+Congratulations, you have been invited to join {{trip.name}} by {{user.first_name}} {{user.last_name}}
+
+Please click the following link to view the inviation.
+http://dev.packmythings.com/web/invitation/{{uuid}}

@@ -16,7 +16,7 @@
     <!-- Le styles -->
     <!--link href="{{ STATIC_URL }}style.css" rel="stylesheet"/-->
 
-	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/base/jquery-ui.css" rel="stylesheet" />
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet" />
     <!--link href="http://current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css" rel="stylesheet" /-->
    <link href="/static/dealstrap/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/dealstrap/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
@@ -41,7 +41,6 @@
   </head>
 
   <body data-twttr-rendered="true">
-
 	{% if user.is_staff %}
 	{% cms_toolbar %}
 
@@ -70,19 +69,6 @@
 	     ref.parentNode.insertBefore(js, ref);
 	   }(document));
 	</script>
- <p>
-      <input type="button"
-        onclick="sendRequestToRecipients(); return false;"
-        value="Send Request to Users Directly"
-      />
-      <input type="text" value="User ID" name="user_ids" />
-      </p>
-    <p>
-    <input type="button"
-      onclick="sendRequestViaMultiFriendSelector(); return false;"
-      value="Send Request to Many Users with MFS"
-    />
-    </p>
 
  	<div class="navbar navbar-static-top">
         <div class="container">
@@ -162,8 +148,8 @@
 	    <!-- Le javascript
 	    ================================================== -->
 	    <!-- Placed at the end of the document so the pages load faster -->
-	 	<script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery-1.8.0.min.js"></script>
-	 	<script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery-ui-1.8.21.custom.min.js"></script>
+	 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 	 	<script type="text/javascript" src="{{ STATIC_URL }}scripts/jquery.zrssfeed.js"></script>
 	 	<script type="text/javascript" src="http://current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js"></script>
 	 <!--script type="text/javascript" src="{{ STATIC_URL }}scripts/less-1.3.0.min.js"></script>-->
@@ -211,29 +197,6 @@
 	    </script>
 		{% render_block "js" %}
 		{% google_analytics %}
-		<script>
-	  
-
-	      function sendRequestToRecipients() {
-	        var user_ids = document.getElementsByName("user_ids")[0].value;
-	        FB.ui({method: 'apprequests',
-	          message: 'My Great Request',
-	          to: user_ids,
-			  redirect_uri: 'http://www.packmythings.com/login/facebook',
-	        }, requestCallback);
-	      }
-
-	      function sendRequestViaMultiFriendSelector() {
-	        FB.ui({method: 'apprequests',
-	          message: 'My Great Request',
-			  redirect_uri: 'http://www.packmythings.com/login/facebook'
-	        }, requestCallback);
-	      }
-
-	      function requestCallback(response) {
-console.log(response);
-	}
-	</script>
 	  </body>
 	
 	</html>

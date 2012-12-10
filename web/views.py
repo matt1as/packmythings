@@ -5,7 +5,7 @@ from django.views.generic import TemplateView, CreateView, DetailView
 
 from web.models import Trip, Item, TripItemRelationship, Text, TripUserRelationship
 from django.db.models import Count
-from social_auth.models import UserSocialAuth
+#from social_auth.models import UserSocialAuth
 from pprint import pprint
 import facebook
 import json
@@ -48,10 +48,10 @@ class TripCreateView(CreateView):
 
 class TripDetailView(DetailView):
 	def get_context_data(self, **kwargs):
-		queryset = UserSocialAuth.objects.filter(provider='facebook', user = self.request.user )#
+		#queryset = UserSocialAuth.objects.filter(provider='facebook', user = self.request.user )#
 		context = super(TripDetailView, self).get_context_data(**kwargs)
 		#if queryset :#
-		instance = queryset.get()
+		#instance = queryset.get()
 		#	graph = facebook.GraphAPI(instance.tokens['access_token'])
 		#	profile = graph.get_object("me")
 		#	friends = graph.get_connections("me", "friends")['data']
@@ -63,7 +63,7 @@ class TripDetailView(DetailView):
 		context['all_items'] = Item.objects.all().exclude( trip = self.object )
 		context['popular_items'] = Item.objects.filter(trip__in = trips_of_type).exclude( trip = self.object).annotate(num_trips=Count('trip')).order_by('-num_trips')
 		context['texts'] = dict(((text.key, text.content) for text in Text.objects.filter( page__key = 'trip/detail' )))
-		context['access_token'] = instance.tokens['access_token']
+		#context['access_token'] = instance.tokens['access_token']
 		context['members'] = tripMembers;
 		#context['friends'] = friends;
 		if len(tripMembers ) > 0 :

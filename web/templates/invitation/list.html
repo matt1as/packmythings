@@ -1,0 +1,20 @@
+{% extends "main_hero_1cols.html" %}
+{% load cms_tags sekizai_tags %}
+{% block title %}
+  {{ object.name }}
+{% endblock %}
+
+
+{% block hero_content %}
+	<legend id="trip_name">Your invitations</legend>
+{% endblock %}
+
+{% block center_content %}
+	<div class="span12">
+		<div class="well unit-bg">
+		{% for invitation in invitations %}
+			{{invitation.trip}}
+		{% endfor %}
+		</div>
+	</div>
+{% endblock %}

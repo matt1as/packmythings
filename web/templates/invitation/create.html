@@ -1,0 +1,26 @@
+{% extends "main_2cols.html" %}
+{% load cms_tags sekizai_tags %}
+{% block title %}
+  Describe your trip
+{% endblock %}
+{% block left_content %}
+{% placeholder "create_trip_header" %}
+<div class="well unit-bg">
+
+ <form action="" method="post">{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+</div>
+{% endblock %}
+{% block right_content %}
+<div class="well unit-bg">
+{% placeholder "create_trip" %}
+</div>
+{% endblock %}
+
+{% block top_content %}
+	<legend>
+		{% placeholder "main" %}
+	</legend>
+{% endblock %}
