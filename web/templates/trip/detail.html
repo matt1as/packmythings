@@ -19,7 +19,7 @@
 		<li class="active"><a href="#pack_list" data-toggle="tab">Pack List</a></li>
 		<li><a href="#description" data-toggle="tab">Description</a></li>
 		<li><a href="#discussion" data-toggle="tab">Discussion</a></li>
-		<li><a href="#members" data-toggle="tab">Members</a></li>
+		<!--li><a href="#members" data-toggle="tab">Members</a></li-->
 
 	</ul>
 {% endblock %}
@@ -47,7 +47,7 @@
 					</ul>
 					{% if is_owner%}
 					<hr/>
-					<input id="search_items_input" data-bind="value: itemToAdd" class="pull-left"/>
+					<input id="search_items_input" data-bind="value: itemToAdd, autocomplete: '/api/v1/item/?format=json name name'" class="pull-left"/>
 					<i class="icon-plus-sign button add_item_image pull_right" data-bind="click: $root.addItem"></i>
 					{% endif %}
 				</div>
@@ -130,6 +130,27 @@ function User(name) {
 	var self = this;
 	self.name = name
 }
+
+ ko.bindingHandlers.autocomplete = {
+        init: function (element, params) {
+            var options = params().split(' ');
+            $(element).bind("focus", function () {
+                $(element).change();
+            });
+            $(element).autocomplete({ source: function (request, response) {
+                $.getJSON(options[0], { name__contains: request.term }, function (data) {
+                    response($.map(data.objects, function (item) {
+                        return { label: item[options[1]], value: item[options[2]] };
+                    }));
+                });
+            }
+            });
+        },
+        update: function (element, params) {
+        }
+    };
+	
+
 // Model holding data for the view
 function TripViewModel() {
 	var self = this;
@@ -185,7 +206,8 @@ function TripViewModel() {
 	}
 	
 	self.addItem = function(  ) {
-		var item = saveItem( self.itemToAdd()  );
+		
+		var item = saveItem(self.itemToAdd() );
 		self.itemToAdd("");
 	}
 	
@@ -252,32 +274,7 @@ function TripViewModel() {
 	tripModel.getHotels();
 	tripModel.getFacebookFriends();
 	
-	$( "#search_items_input" ).autocomplete({
-		source: function( request, response ) {
-			$.ajax({
-				url: "/api/v1/item/",
-				dataType: "jsonp",
-				data: {
-					name__contains: request.term
-				},
-				success: function( data ) {
-					response( $.map( data.objects, function( item ) {
-						return {
-							label: item.name,
-							value: item.name,
-						}
-					}));
-				}
-			});
-		},
-		minLength: 2,
-		select: function( event, ui ) {
-		},
-		open: function() {	
-		},
-		close: function() {
-		}
-	});
+
 
 	function addMember( context, item, user) {
 		var json = new Object()
@@ -407,6 +404,9 @@ function TripViewModel() {
 			return editTrip('name', value );
 		});
 	{% endif %}
+	
+	
+	
 </script>
 {% endblock %}
 
