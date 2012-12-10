@@ -1,5 +1,10 @@
 *.log
 *.pot
 *.pyc
+*.*~*
+.project
+.pydevproject
 local_settings.py
 db
+/build
+/style.css
