@@ -131,20 +131,25 @@ function User(name) {
 	self.name = name
 }
 
- ko.bindingHandlers.autocomplete = {
+ 	ko.bindingHandlers.autocomplete = {
         init: function (element, params) {
             var options = params().split(' ');
             $(element).bind("focus", function () {
                 $(element).change();
             });
-            $(element).autocomplete({ source: function (request, response) {
-                $.getJSON(options[0], { name__contains: request.term }, function (data) {
-                    response($.map(data.objects, function (item) {
-                        return { label: item[options[1]], value: item[options[2]] };
-                    }));
-                });
-            }
-            });
+            $(element).autocomplete({ 
+            	source: function (request, response) {
+                	$.getJSON(options[0], { name__contains: request.term }, function (data) {
+                   		response($.map(data.objects, function (item) {
+                       		return { label: item[options[1]], value: item[options[2]] };
+                   		}));
+                	});
+   
+             	},
+             	select: function( event, ui ) {
+					tripModel.itemToAdd(ui.item.value);
+             	}
+             });
         },
         update: function (element, params) {
         }
